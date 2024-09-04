@@ -28,6 +28,7 @@ public:
 	Fraction(int top = 0, int bottom = 1) {
 		num = top;
 		den = bottom;
+		common = gcd(num, den);
 	}
 
 	//overload the << operator: see definition below class
@@ -41,6 +42,7 @@ public:
 
 private:
 	int num, den;
+	int common;
 }; //the ; is required here at the end of the class definition
 
 //define the overloading of the + operator
@@ -58,7 +60,7 @@ bool operator ==(const Fraction& frac1, const Fraction& frac2) {
 
 //define the overloading of the << operator
 ostream& operator<<(ostream& stream, const Fraction& frac) {
-	stream << frac.num << "/" << frac.den;
+	stream << frac.num/frac.common << "/" << frac.den/frac.common;
 	return stream;
 }
 
@@ -76,6 +78,9 @@ int main() {
 
 	Fraction f2(1, 4); //uses default constructor
 	cout << "f2 = " << f2 << endl;
+
+	Fraction f6(2, 4); //uses default constructor
+	cout << "f6 = " << f6 << endl;
 
 	Fraction f3 = f0 + f2; //uses overloaded + operator
 	cout << "f3 is f0 + f2 = " << f3 << endl;
