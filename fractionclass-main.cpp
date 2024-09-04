@@ -28,7 +28,7 @@ public:
 	Fraction(int top = 0, int bottom = 1) {
 		num = top;
 		den = bottom;
-		common = gcd(num, den);
+		common = gcd(num, den); //find the greatest common divisor
 	}
 
 	//overload the << operator: see definition below class
@@ -49,8 +49,9 @@ private:
 Fraction operator +(const Fraction& frac1, const Fraction& frac2) {
 	int newnum = frac1.num * frac2.den + frac1.den * frac2.num;
 	int newden = frac1.den * frac2.den;
-	int common = gcd(newnum, newden);
-	return Fraction(newnum / common, newden / common);
+	/*int common = gcd(newnum, newden);*/
+	/*return Fraction(newnum / common, newden / common);*/
+	return Fraction(newnum, newden); // + operator does not need to be reduced.
 }
 
 //define the overloading of the == operator
