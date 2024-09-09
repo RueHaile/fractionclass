@@ -58,7 +58,7 @@ bool operator ==(const Fraction& frac1, const Fraction& frac2) {
 
 //define the overloading of the << operator
 ostream& operator<<(ostream& stream, const Fraction& frac) {
-	stream << frac.num/frac.common << "/" << frac.den/frac.common;
+	stream << frac.num << "/" << frac.den;
 	return stream;
 }
 
