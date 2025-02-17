@@ -1,95 +1,225 @@
-/**
-Fraction class example is written to show simple use of a C++ class
-with
-- constructor (aka initializer),
-- and operator overloading
+/** L2: virtual pets
+Rue Haile
+username: hailer
+Purpose: To learn about the implementation of OOP principles in C++.
+
+Acknowledgements:
+Modified from original stub code written by Dr. Jan Pearce.
+Fun fact source: Nationwide Pet Insurance. (n.d.). Fun facts about pets. Retrieved February 13, 2025,
+from https://www.petinsurance.com/healthzone/ownership-adoption/pet-ownership/pet-owner-topics/fun-facts-about-pets/
+Further reference: geeksforgeeks.org
+
 */
 
+
 #include <iostream>
+#include <string>
+#include <random>
 using namespace std;
 
-//function to find the greatest common divisor
-int gcd(int m, int n) {
-	while (m % n != 0) {
-		int oldm = m;
-		int oldn = n;
-
-		m = oldn;
-		n = oldm % oldn;
-	}
-	return n;
-}
-
-//class definition
-class Fraction {
+// This class is used to generate a random number in a given range
+class GetRandom {
+    /** Uses <random> from C++11 to return a random integer in range [0..size-1] */
 public:
-
-	//default constructor
-	Fraction(int top = 0, int bottom = 1) {
-		num = top;
-		den = bottom;
-	}
-
-	//overload the << operator: see definition below class
-	friend ostream& operator<<(ostream& stream, const Fraction& frac);
-
-	//overload the == operator: see definition below class
-	friend bool operator ==(const Fraction& frac1, const Fraction& frac2);
-
-	//overload the + operator: see definition below class
-	friend Fraction operator +(const Fraction& frac1, const Fraction& frac2);
+    GetRandom(int size) : gen(rd()), intdist(0, size - 1) {} // Fix range to be 0-based
+    int get_random() { return intdist(gen); } // Generate a new random number each call
 
 private:
-	int num, den;
-}; //the ; is required here at the end of the class definition
+    random_device rd;
+    mt19937 gen;
+    uniform_int_distribution<int> intdist;
+}; // end of GetRandom
 
-//define the overloading of the + operator
-Fraction operator +(const Fraction& frac1, const Fraction& frac2) {
-	int newnum = frac1.num * frac2.den + frac1.den * frac2.num;
-	int newden = frac1.den * frac2.den;
-	int common = gcd(newnum, newden);
-	return Fraction(newnum / common, newden / common);
-}
+class FunFact {    // This class is used to generate a random fun fact about pets
+private:
+    string fun[28] = { //The following are fun facts about pets from Nationwide Pet Insurance.
+        "Dogs only sweat from the bottoms of their feet, the only way they can discharge heat is by panting.", // Retrieved February 13, 2025, from https://www.petinsurance.com/healthzone/ownership-adoption/pet-ownership/pet-owner-topics/fun-facts-about-pets/
+        "Dogs have about 100 different facial expressions, most of them made with the ears.",
+        "Dogs have about 10 vocal sounds.",
+        "Dogs do not have an appendix.",
+        "There are more than 350 different breeds of dogs worldwide.",
+        "Dalmatians are born spotless: at first pure white, their spots develop as they age.",
+        "Contrary to popular belief, dogs aren’t color blind; they can see shades of blue, yellow, green, and gray.",
+        "Most domestic dogs are capable of reaching speeds up to about nineteen miles per hour when running at full speed.",
+        "Using their swiveling ears like radar dishes, experiments have shown that dogs can locate the source of a sound in 6/100ths of a second.",
+        "Domesticated for more than 10,000 years, the dog was one of the first animals domesticated by humans.",
+        "Cats do not have sweat glands.",
+        "A cat can jump as much as seven times its height.",
+        "Cats have five toes on each front paw, but only four toes on each back paw.",
+        "Cats have over one hundred vocal sounds, while dogs only have about ten.",
+        "A pack of kittens is called a kindle, while a pack of adult cats is called a clowder.",
+        "An adult cat can run about 12 miles per hour, and can sprint at nearly thirty miles per hour.",
+        "A cat's tongue is scratchy because it's lined with papillae—tiny elevated backwards hooks that help to hold prey in place.",
+        "The nose pad of each cat has ridges in a unique pattern not unlike a person's fingerprints.",
+        "Cats' bodies are extremely flexible; the cat skeleton contains more than 230 bones (a human has about 206), and the pelvis and shoulders loosely attach to the spine.",
+        "Cats have better memories than dogs. Tests conducted by the University of Michigan concluded that while a dog's memory lasts no more than 5 minutes, a cat's can last as long as 16 hours—exceeding even that of monkeys and orangutans.",
+        "To survive, every bird must eat at least half its own weight in food each day.",
+        "A bird's heart beats 400 times per minute while they are resting.",
+        "Americans own more than 60 million pet birds.",
+        "Larger parrots such as the macaws and cockatoos live more than 75 years.",
+        "Many hamsters only blink one eye at a time.",
+        "Iguanas are able to hold their breath for up to 30 minutes.",
+        "A garter snake can give birth to 85 babies.",
+        "Ferrets are currently the third most popular pet in the US."
+    };
+public:
+    // Sets a fun fact based on the provided index
+    string set_fun_fact(int index) {
+        return fun[index];
+    }
 
-//define the overloading of the == operator
-bool operator ==(const Fraction& frac1, const Fraction& frac2) {
-	return  (frac1.num == frac2.num && frac1.den == frac2.den);
-}
+    // Gets a random fun fact
+    string get_random_fun_fact() {
+        GetRandom random(28); // Create a GetRandom object with size 28
+        int index = random.get_random(); // Get a random index
+        return set_fun_fact(index); // Return the fun fact at the random index
+    }
+};
 
-//define the overloading of the << operator
-ostream& operator<<(ostream& stream, const Fraction& frac) {
-	stream << frac.num << "/" << frac.den;
-	return stream;
-}
+// Define the Pet class
+class Pet {
+private:
+    string name;
+    string species;
+    string favorite_toy;
+    int hunger_level; // Hunger level of the pet
+
+public:
+    // Constructor to initialize the hunger level
+    Pet() : hunger_level(5) {}
+
+    // Prompts user to enter the pet's name
+    void set_name() {
+        cout << "What is your pet's name? ";
+        cin >> name;
+    }
+    // Returns the pet's name
+    string get_name() { return name; }
+
+    // Prompts user to enter the pet's species
+    void set_species() {
+        cout << "What species is your pet? ";
+        cin >> species;
+    }
+    // Returns the pet's species
+    string get_species() { return species; }
+
+    // Prompts user to enter the pet's favorite toy
+    void set_toy() {
+        cout << "What's your pet's favorite toy (ball, slime, tweety)? ";
+        cin >> favorite_toy;
+    }
+    // Returns the pet's favorite toy
+    string get_toy() { return favorite_toy; }
+
+    // Sets the pet's hunger level
+    void set_hunger_level() {
+        cout << "Set how hungry your pet is (from 1-10, where 1 is starving and 7 and above is full): ";
+        cin >> hunger_level;
+    }
+    // Returns the pet's hunger level
+    int get_hunger_level() { return hunger_level; }
+
+    // Feeds the pet and increases its hunger level
+    void feed() {
+        if (hunger_level < 7) {
+            cout << "Feeding" << name << endl;
+            cout << name << " is now less hungry." << endl;
+        }
+        else {
+            cout << name << " is already full!" << endl;
+        }
+    }
+
+    // Displays the pet's information
+    void display_info() {
+        cout << "Pet's name: " << get_name() << endl;
+        cout << "Pet's species: " << get_species() << endl;
+        cout << get_name() << "'s favorite toy: " << get_toy() << endl;
+    }
+
+    // Gets a random fun fact related to the pet
+    void get_fun_fact(FunFact& funFact) {
+        cout << "Did you know? " << funFact.get_random_fun_fact() << endl;
+    }
+};
+
+class Owner {   // Define the Owner class
+private:
+    string time_of_day;
+    string colour;
+    string name;
+    int age;
+
+public:
+    // Prompts user to enter their name
+    void set_name() {
+        cout << "Hey there! What's your name? ";
+        cin >> name;
+    }
+    // Returns the owner's name
+    string get_name() { return name; }
+
+    // Prompts user to enter their age
+    void set_age() {
+        cout << "Nice to meet you, " << name << "! How young are you? ";
+        cin >> age;
+    }
+    // Returns the owner's age
+    int get_age() { return age; }
+
+    // Prompts user to enter the time of day
+    void set_time_of_day() {
+        cout << "What time of day is it (M for Morning, N for Noon, N for Night)? ";
+        cin >> time_of_day;
+    }
+    // Returns the time of day
+    string get_time_of_day() { return time_of_day; }
+
+    // Prompts user to enter their favorite color
+    void set_color() {
+        cout << "What's your favorite color? ";
+        cin >> colour;
+    }
+    // Returns the owner's favorite color
+    string get_color() { return colour; }
+
+    // Feeds the pet by calling the pet's feed method
+    void feed_pet(Pet& pet) {
+        pet.feed();
+    }
+
+    // Displays the owner's information
+    void display_info() {
+        cout << "Owner's name: " << get_name() << endl;
+        cout << "Owner's age: " << get_age() << endl;
+        cout << "Current time of day: " << get_time_of_day() << endl;
+        cout << "Favorite color: " << get_color() << " (which is also your pet's color!)" << endl;
+    }
+};
 
 int main() {
-	char enterme;
-	int numerator, denominator;
+    Owner owner1;
+    Pet pet1;
+    FunFact fun_facter;
 
-	cout << "Demo use of the constructor & operator overloading." << endl;
+    // Ensure all setters are called
+    owner1.set_name();
+    owner1.set_age();
+    owner1.set_time_of_day();
+    owner1.set_color();
 
-	Fraction f0; //uses default constructor
-	cout << "f0 = " << f0 << endl;
+    pet1.set_name();
+    pet1.set_species();
+    pet1.set_toy();
 
-	Fraction f1(2); //uses default constructor
-	cout << "f1 = " << f1 << endl;
+    owner1.display_info();
+    pet1.display_info();
+    pet1.set_hunger_level();
+    owner1.feed_pet(pet1);  // Owner feeds the pet
 
-	Fraction f2(1, 4); //uses default constructor
-	cout << "f2 = " << f2 << endl;
+    // Pet gets a random fun fact
+    pet1.get_fun_fact(fun_facter);
 
-	Fraction f3 = f0 + f2; //uses overloaded + operator
-	cout << "f3 is f0 + f2 = " << f3 << endl;
-
-	Fraction f4 = f2 + f2; //uses overloaded + operator
-	cout << "f4 is f2 + f2 = " << f4 << endl;
-
-	cout << "Enter numerator: ";
-	cin >> numerator;
-	cout << "Enter demoninator: ";
-	cin >> denominator;
-	Fraction f5(numerator, denominator); //uses default constructor
-	cout << "You entered = " << f5 << endl;
-
-	cin >> enterme; //holds console open in some situations
-	return 0;
-}
+    return 0;
+} // end of main
